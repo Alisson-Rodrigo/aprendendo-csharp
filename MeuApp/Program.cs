@@ -5,7 +5,7 @@ namespace MeuApp
 {
     class Program {
         static void Main() {
-            
 
+        }
     }
 }
