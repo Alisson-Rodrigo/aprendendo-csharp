@@ -1,29 +1,42 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+//tipos genéricos
+
 namespace MeuApp
 {
  
     class Program {
         static void Main() {
-            var pessoa = new Pessoa();
-            pessoa = new PessoaFisica();
-            pessoa = new PessoaJuridica();
+            var person = new Person { Name = "João", Age = 20 };
+            var payment = new Payment<Person> { Value = person };
+            Console.WriteLine(payment.Value.Name);
+            Console.WriteLine(payment.Value.Age);
+
+            var data = new Data<Person>();
+            data.Save(person);
+            Console.WriteLine(data.Value.Name);
+            Console.WriteLine(data.Value.Age);
+
 
         }
-        public class Pessoa {
-            public string pessoa {get; set;}
 
+        public class Person {
+            public string Name { get; set; }
+            public int Age { get; set; }
         }
 
-        public class PessoaFisica : Pessoa {
-            public string CPF { get; set; }
+        public class Payment<T> {
+            public T Value { get; set; }
         }
 
-        public class PessoaJuridica : Pessoa {
-            public string CNPJ { get; set; }
-        }
+        public class Data<T> {
+            public T Value { get; set; }
 
+            public void Save(T value) {
+                Value = value;
+            }
+        }
 
 
     }
