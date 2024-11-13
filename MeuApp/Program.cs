@@ -1,43 +1,64 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.IO;
+using System.Threading.Tasks;
+using YoutubeExplode;
+using YoutubeExplode.Videos.Streams;
 
-//tipos genéricos
-
-namespace MeuApp
+class Program
 {
- 
-    class Program {
-        static void Main() {
-            var person = new Person { Name = "João", Age = 20 };
-            var payment = new Payment<Person> { Value = person };
-            Console.WriteLine(payment.Value.Name);
-            Console.WriteLine(payment.Value.Age);
+    static async Task Main(string[] args)
+    {
+        Console.WriteLine("Digite a URL do vídeo do YouTube:");
+        var url = Console.ReadLine();
 
-            var data = new Data<Person>();
-            data.Save(person);
-            Console.WriteLine(data.Value.Name);
-            Console.WriteLine(data.Value.Age);
+        var youtube = new YoutubeClient();
 
+        try
+        {
+            // Obter informações do vídeo
+            var video = await youtube.Videos.GetAsync(url);
+            Console.WriteLine($"Título do vídeo: {video.Title}");
 
-        }
+            // Obter o manifesto de streams
+            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
 
-        public class Person {
-            public string Name { get; set; }
-            public int Age { get; set; }
-        }
+            // Tentar obter o melhor stream muxed (vídeo + áudio)
+            var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
 
-        public class Payment<T> {
-            public T Value { get; set; }
-        }
+            if (streamInfo != null)
+            {
+                // Definir o nome do arquivo com base no título do vídeo
+                var fileName = $"{video.Title}.{streamInfo.Container.Name}";
 
-        public class Data<T> {
-            public T Value { get; set; }
+                Console.WriteLine($"Baixando o vídeo com áudio e vídeo combinados para o arquivo: {fileName}...");
+                await youtube.Videos.Streams.DownloadAsync(streamInfo, fileName);
+                Console.WriteLine("Download concluído com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("Stream muxed (áudio + vídeo) não disponível. Tentando baixar o áudio separadamente...");
 
-            public void Save(T value) {
-                Value = value;
+                // Tentar obter o melhor stream de áudio
+                var audioStreamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
+                
+                if (audioStreamInfo != null)
+                {
+                    // Definir o nome do arquivo com base no título do vídeo e no tipo de stream
+                    var audioFileName = $"{video.Title}.{audioStreamInfo.Container.Name}";
+
+                    Console.WriteLine($"Baixando apenas o áudio para o arquivo: {audioFileName}...");
+                    await youtube.Videos.Streams.DownloadAsync(audioStreamInfo, audioFileName);
+                    Console.WriteLine("Download do áudio concluído com sucesso!");
+                }
+                else
+                {
+                    Console.WriteLine("Nenhum stream de áudio disponível.");
+                }
             }
         }
-
-
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao baixar o vídeo: {ex.Message}");
+        }
     }
 }

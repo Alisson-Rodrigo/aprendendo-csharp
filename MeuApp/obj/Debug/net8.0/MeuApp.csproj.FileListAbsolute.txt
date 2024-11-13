@@ -244,3 +244,7 @@ C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\obj\Debug\net8.0\r
 C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\obj\Debug\net8.0\MeuApp.pdb
 C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\obj\Debug\net8.0\MeuApp.genruntimeconfig.cache
 C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\obj\Debug\net8.0\ref\MeuApp.dll
+C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\bin\Debug\net8.0\AngleSharp.dll
+C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\bin\Debug\net8.0\YoutubeExplode.dll
+C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\PurooLight\Documents\GitHub\aprendendo-csharp\MeuApp\bin\Debug\net8.0\libvideo.dll
